@@ -1,0 +1,16 @@
+/*
+  Design tokens. Owner: Muizz.
+  Every component reads these variables. Each team overrides the values with its own look;
+  the variable names stay the same across all eight products.
+
+  To define:
+  - [ ] Colours: background, surface, text, text-muted, border, primary, danger, success, warning
+        (plus a "text on" colour for each filled colour)
+  - [ ] Spacing scale
+  - [ ] Radius
+  - [ ] Font family
+  - [ ] Focus ring (colour and width), contrast at least 3:1
+*/
+
+:root {
+}
