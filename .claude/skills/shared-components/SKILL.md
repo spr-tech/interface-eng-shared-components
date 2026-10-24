@@ -12,7 +12,7 @@ Product UI in TeSA Cohort 6 is built from the shared components in `src/componen
 1. **Look first.** List `src/components/ui/` in the project. If a shared component covers the need, use it.
 2. **Read the real API.** Open the component file and check what it exports, its prop types, its required props and its header comment. Don't guess prop names; the README and the source are the truth.
 3. **Bring its dependencies.** When copying a component into a product, also copy the files it imports:
-   - `src/lib/cn.ts`, for every component except Card (and the Textarea stub)
+   - `src/lib/cn.ts`, for every component except Card
    - `button.tsx`, for Dialog, EmptyState, ErrorState and FilterBar
    - `form-field.tsx` and `input.tsx`, for FilterBar
 
@@ -39,7 +39,7 @@ Product UI in TeSA Cohort 6 is built from the shared components in `src/componen
 | Modal content | `Dialog` (`title` and `description` required) | `@/components/ui/dialog` |
 | "Are you sure?" | `ConfirmDialog` (`confirmLabel` names the action, `tone="danger"` for destructive, async `onConfirm`) | `@/components/ui/dialog` |
 | Search and filters above a list | `FilterBar`, plus `FilterGroup` for checkbox groups | `@/components/ui/filter-bar` |
-| Multi-line text | **Textarea is not implemented** (stub file). Flag it to the user rather than building a local replacement | — |
+| Multi-line text | `Textarea` inside `FormField` (`maxLength` + `showCount` for a character count) | `@/components/ui/textarea` |
 
 The `@/` alias assumes the product maps `@/*` to `src/*`. The shared repo's `tsconfig.json` does this. Otherwise use relative imports.
 
