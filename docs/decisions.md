@@ -20,3 +20,14 @@ Dialog and Toast corners fell back to square because --radius was undefined; an 
 or editing those components, and products change one value for all corners.
 Agreed by: Muizz Jamiu.
 Informed: Ehimare J. Okosun, Victor Oyeleke, Ufoma Onowho.
+
+2026-10-24  tokens.css completed; no Tailwind theme file.
+Added --color-info (#0e7490) and --color-on-info (#ffffff); StatusBadge's info tone uses them instead of primary.
+Added --color-surface-hover (#e4e4e7) and --font-display (defaults to --font-sans) for product screens.
+No --radius-control and no theme.css: every component reads tokens with var(--…), and none uses theme classes
+(Checkbox, Select and FilterBar were converted in f7a72e0), so products copy tokens.css alone.
+Why: info badges looked like primary actions; one styling file is less to copy and nothing to keep in sync.
+Contrast: on-info on info 5.4:1, info on bg 5.4:1 and on surface 4.9:1; on surface-hover: text 14.0:1, muted 6.1:1,
+input border 3.8:1, focus 4.1:1. All pass WCAG 2.2 AA.
+Agreed by: Muizz Jamiu.
+Informed: Ehimare J. Okosun, Victor Oyeleke, Ufoma Onowho.

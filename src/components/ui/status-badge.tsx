@@ -16,7 +16,7 @@
 //   the current state; it doesn't announce changes. Use Toast for that.
 // - Long labels wrap inside their container instead of overflowing.
 //
-// Text contrast with the default tokens: neutral 16.1:1, info 6.7:1,
+// Text contrast with the default tokens: neutral 16.1:1, info 5.4:1,
 // success 5.0:1, warning 4.9:1, danger 6.5:1.
 
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
@@ -30,12 +30,11 @@ export type StatusBadgeProps = HTMLAttributes<HTMLSpanElement> & {
   children: ReactNode;
 };
 
-// tokens.css has no separate info colour, so info uses the primary role.
 // Neutral sits on --color-surface, the same as Card, so it gets a visible edge.
 const toneClasses: Record<StatusBadgeTone, string> = {
   neutral:
     "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--color-border-input)]",
-  info: "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent",
+  info: "bg-[var(--color-info)] text-[var(--color-on-info)] border-transparent",
   success: "bg-[var(--color-success)] text-[var(--color-on-success)] border-transparent",
   warning: "bg-[var(--color-warning)] text-[var(--color-on-warning)] border-transparent",
   danger: "bg-[var(--color-danger)] text-[var(--color-on-danger)] border-transparent",
