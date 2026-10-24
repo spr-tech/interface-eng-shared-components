@@ -52,12 +52,13 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
         className={cn(
           // A 20 px box, and the ::after extends the hit area to 24×24 px (WCAG 2.5.8).
           // -inset-1 (4 px), not 2 px: the ::after is measured from inside the 2 px border.
-          "relative mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-[4px]",
-          "border-2 border-border bg-surface",
+          "relative mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-[var(--radius-sm)]",
+          "border-2 border-[var(--color-border-input)] bg-[var(--color-bg)]",
           "after:absolute after:-inset-1 after:content-['']",
-          "data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-on-primary",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-          "disabled:cursor-not-allowed disabled:opacity-60",
+          "data-[state=checked]:border-[var(--color-primary)] data-[state=checked]:bg-[var(--color-primary)] data-[state=checked]:text-[var(--color-on-primary)]",
+          "focus-visible:[outline:var(--focus-ring-width)_solid_var(--color-focus)]",
+          "focus-visible:[outline-offset:var(--focus-ring-offset)]",
+          "disabled:cursor-not-allowed disabled:bg-[var(--color-surface)] disabled:opacity-60",
         )}
       >
         <RadixCheckbox.Indicator>
@@ -65,15 +66,15 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
 
-      <div className="min-w-0">
+      <div className="min-w-0 font-[family-name:var(--font-sans)]">
         <label
           htmlFor={checkboxId}
-          className={cn("block break-words text-sm text-text", disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer")}
+          className={cn("block break-words text-sm text-[var(--color-text)]", disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer")}
         >
           {label}
         </label>
         {description && (
-          <p id={descriptionId} className="text-sm text-muted">
+          <p id={descriptionId} className="text-sm text-[var(--color-text-muted)]">
             {description}
           </p>
         )}

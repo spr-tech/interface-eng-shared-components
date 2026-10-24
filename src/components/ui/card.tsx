@@ -62,20 +62,22 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
     return (
       <div ref={ref} className={classes} {...props}>
-        {image ? (
-          <img
-            src={image}
-            alt={imageAlt}
-            className="block aspect-video w-full object-cover"
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            className="flex aspect-video w-full items-center justify-center bg-[var(--color-bg)] text-[var(--color-text-muted)]"
-          >
-            Image unavailable
-          </div>
-        )}
+        {image !== undefined ? (
+          image ? (
+            <img
+              src={image}
+              alt={imageAlt}
+              className="block aspect-video w-full object-cover"
+            />
+          ) : (
+            <div
+              aria-hidden="true"
+              className="flex aspect-video w-full items-center justify-center bg-[var(--color-bg)] text-[var(--color-text-muted)]"
+            >
+              Image unavailable
+            </div>
+          )
+        ) : null}
 
         <div className="min-w-0 p-4">
           {children}
