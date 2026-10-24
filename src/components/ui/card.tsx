@@ -49,13 +49,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   ) {
     const classes = [
       "relative min-w-0 overflow-hidden rounded-lg border",
-      "border-[var(--border)] bg-[var(--surface)]",
-      "text-[var(--text)]",
+      "border-[var(--color-border)] bg-[var(--color-surface)]",
+      "text-[var(--color-text)]",
       // The link fills the card, so its own outline would be clipped by
       // overflow-hidden. Draw the keyboard focus ring on the card instead.
-      "has-[>a:focus-visible]:outline has-[>a:focus-visible]:outline-4",
-      "has-[>a:focus-visible]:outline-offset-2",
-      "has-[>a:focus-visible]:outline-[var(--focus-ring)]",
+      "has-[>a:focus-visible]:[outline:var(--focus-ring-width)_solid_var(--color-focus)]",
+      "has-[>a:focus-visible]:[outline-offset:var(--focus-ring-offset)]",
       className,
     ]
       .filter(Boolean)
@@ -72,7 +71,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         ) : (
           <div
             aria-hidden="true"
-            className="flex aspect-video w-full items-center justify-center bg-[var(--background)] text-[var(--text-muted)]"
+            className="flex aspect-video w-full items-center justify-center bg-[var(--color-bg)] text-[var(--color-text-muted)]"
           >
             Image unavailable
           </div>
@@ -166,7 +165,7 @@ export const CardImage = forwardRef<
     return (
       <div
         aria-hidden="true"
-        className={`flex aspect-video w-full items-center justify-center bg-[var(--background)] text-[var(--text-muted)] ${className}`}
+        className={`flex aspect-video w-full items-center justify-center bg-[var(--color-bg)] text-[var(--color-text-muted)] ${className}`}
       >
         Image unavailable
       </div>
