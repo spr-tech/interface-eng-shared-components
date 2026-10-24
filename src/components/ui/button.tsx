@@ -7,7 +7,10 @@
 // - [ ] Defaults to type="button"
 // - [ ] Icon-only buttons require aria-label
 // - [ ] Forwards ref, accepts className
-// - [ ] Keyboard-only test passed, screen reader checked once
+// - [x] Keyboard (checked from code 2026-10-24): native <button>, no tabindex, so it sits in
+//       DOM Tab order; Enter and Space fire click; loading uses aria-disabled, not disabled,
+//       so the button keeps focus and its clicks are swallowed
+// - [ ] Screen reader checked once: pending manual check (Muizz)
 // - [ ] Typed props, no `any`, colours from tokens.css
 // - [ ] Reviewed by one other interface engineer
 
