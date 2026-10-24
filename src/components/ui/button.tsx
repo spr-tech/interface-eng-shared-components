@@ -2,22 +2,17 @@
 // Owner: Muizz
 //
 // Done when:
-// - [ ] Variants: primary, secondary, danger, ghost. Sizes: sm, md, lg
-// - [ ] Loading state: spinner, keeps width, aria-busy, blocks second click
-// - [ ] Defaults to type="button"
-// - [ ] Icon-only buttons require aria-label
-// - [ ] Forwards ref, accepts className
+// - [x] Variants: primary, secondary, danger, ghost. Sizes: sm, md, lg
+// - [x] Loading state: spinner, keeps width, aria-busy, blocks second click
+// - [x] Defaults to type="button"
+// - [x] Icon-only buttons require aria-label
+// - [x] Forwards ref, accepts className
 // - [x] Keyboard (checked from code 2026-10-24): native <button>, no tabindex, so it sits in
 //       DOM Tab order; Enter and Space fire click; loading uses aria-disabled, not disabled,
 //       so the button keeps focus and its clicks are swallowed
 // - [ ] Screen reader checked once: pending manual check (Muizz)
-// - [ ] Typed props, no `any`, colours from tokens.css
+// - [x] Typed props, no `any`, colours from tokens.css
 // - [ ] Reviewed by one other interface engineer
-
-
-
-// Button
-// Owner: Muizz
 //
 // - Variants: primary, secondary, danger, ghost. Sizes: sm, md, lg.
 // - loading: shows a spinner, keeps the button's width, sets aria-busy,
