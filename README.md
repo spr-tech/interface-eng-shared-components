@@ -38,7 +38,7 @@ Owners come from the file headers and [docs/decisions.md](docs/decisions.md). Al
 | `select.tsx` | `Select`, `SelectOption`, `SelectProps` | Pick one option from a list | Ehimare J. Okosun | `cn`, `@radix-ui/react-select`, `lucide-react` |
 | `skeleton.tsx` | `Skeleton`, `SkeletonProps` | Loading placeholder | Ufoma Onowho | `cn` |
 | `status-badge.tsx` | `StatusBadge` + types | Shows an item's current status | Ufoma Onowho | `cn` |
-| `textarea.tsx` | nothing yet | Multi-line text input | Muizz Jamiu | **Not implemented.** The file is a stub (`export {};`) |
+| `textarea.tsx` | `Textarea`, `TextareaProps` | Multi-line text input, with an optional character count | Muizz Jamiu | `cn` |
 | `toast.tsx` | `ToastProvider`, `useToast` + types | Short notifications after an action | Victor Oyeleke | `cn`, `@radix-ui/react-toast` |
 
 `cn` is [src/lib/cn.ts](src/lib/cn.ts) (`clsx` + `tailwind-merge`).
@@ -161,7 +161,7 @@ Never pass an `Error` or `error.message`. Map the failure to plain copy first, s
 
 Props: `label` (required), `children` (required, a function that receives the props to spread on the control), `hint`, `error`, `required`, `id`, `className`.
 
-It ties the label to the control and links the hint and error with `aria-describedby`. It sets `aria-invalid` when there is an error and `aria-required` when the field is required. It works with Input and Select.
+It ties the label to the control and links the hint and error with `aria-describedby`. It sets `aria-invalid` when there is an error and `aria-required` when the field is required. It works with Input, Textarea and Select.
 
 ```tsx
 <FormField label="Food name" hint="As donors would say it" error={errors.title?.message} required>
@@ -230,7 +230,22 @@ Tokens used by each tone:
 
 ### Textarea
 
-**Not implemented yet.** [textarea.tsx](src/components/ui/textarea.tsx) exports nothing. Its planned behaviour is to work inside FormField and forward its ref, but it has no props or API yet. Confirm with Muizz Jamiu before you rely on it. Don't write your own replacement in a product; add it here instead.
+Props: every native `<textarea>` attribute (`rows` defaults to 4), plus `showCount`. Forwards its ref, so it works with React Hook Form's `register()`. Formik's `getFieldProps()` works too. Error styling switches on from `aria-invalid`, which FormField sets. Users can resize it vertically only. Always use it inside FormField.
+
+- `showCount` together with `maxLength` shows a count such as "120 / 500" under the field. Without `maxLength`, `showCount` does nothing.
+- The count is linked to the field with `aria-describedby`, so screen readers hear "120 of 500 characters used" when the field gets focus.
+- It is announced politely while typing only in the last 20 characters, so screen readers aren't interrupted on every keystroke.
+
+```tsx
+<FormField label="Delivery notes" hint="Gate code, landmarks, anything the driver needs" error={errors.notes?.message}>
+  {(field) => <Textarea {...field} {...register("notes")} maxLength={500} showCount />}
+</FormField>
+
+// Formik
+<FormField label="Delivery notes" error={formik.touched.notes ? formik.errors.notes : undefined}>
+  {(field) => <Textarea {...field} {...formik.getFieldProps("notes")} maxLength={500} showCount />}
+</FormField>
+```
 
 ### Toast
 
@@ -260,7 +275,7 @@ toast({
 ## Using the components
 
 1. Copy each component file you need into your product's `src/components/ui/`. Also copy every file in its "Needs" column (see the table). For example, FilterBar also needs `button.tsx`, `form-field.tsx` and `input.tsx`.
-2. Copy [src/lib/cn.ts](src/lib/cn.ts) to `src/lib/cn.ts`. Every component except Card (and the Textarea stub) imports it as `../../lib/cn`, so keep the same folder layout or fix the imports.
+2. Copy [src/lib/cn.ts](src/lib/cn.ts) to `src/lib/cn.ts`. Every component except Card imports it as `../../lib/cn`, so keep the same folder layout or fix the imports.
 3. Install the npm packages your chosen components use:
    ```
    npm install clsx tailwind-merge                 # always (cn)
@@ -285,6 +300,8 @@ Copy [src/styles/tokens.css](src/styles/tokens.css) to `src/styles/tokens.css` i
 **Change the values, never the names.** The components read these variables by name, so a renamed variable silently stops working. To give your product its own look, edit values such as `--color-primary`, `--radius-md` or `--font-sans`. Don't hard-code colours in components.
 
 The tokens are surfaces (`--color-bg`, `--color-surface`, `--color-border`, `--color-border-input`), text (`--color-text`, `--color-text-muted`), and the roles primary, danger, success and warning. Each filled role has an `--color-on-*` colour for text on top of it, and primary and danger also have `-hover`. The rest are the focus ring (`--color-focus`, `--focus-ring-width`, `--focus-ring-offset`), shape (`--radius-sm`, `--radius-md`) and `--font-sans`.
+
+`--radius` is an alias of `--radius-md`. Dialog and Toast read it, so changing `--radius-md` changes their corners too.
 
 ### Contrast
 
@@ -353,11 +370,11 @@ What the components already do. Don't undo it when you use them.
   - Skeleton fills its container's width.
 - **Reduced motion.** The Skeleton pulse and the Button spinner stop when `prefers-reduced-motion` is on.
 
-Before you merge: do a keyboard-only test, and check once with a screen reader. Card, Skeleton, StatusBadge, EmptyState and ErrorState have passed both. Button and Textarea still show them as not done, and the other components have no checklist yet.
+Before you merge: do a keyboard-only test, and check once with a screen reader. Card, Skeleton, StatusBadge, EmptyState and ErrorState have passed both. Button and Textarea have passed the keyboard checks that can be verified from their code; their screen reader check is pending (Muizz Jamiu). The other components have no checklist yet.
 
 ## Known gaps (need confirmation)
 
-- **Textarea** is not implemented (owner: Muizz Jamiu).
-- **`--radius`** is used by Dialog and Toast, but `tokens.css` only defines `--radius-sm` and `--radius-md`. Until one of them changes, those corners fall back to square (owners: Victor Oyeleke and Muizz Jamiu).
+- **Tailwind theme classes.** Checkbox, Select and FilterBar use classes such as `bg-surface`, `text-text`, `text-muted`, `border-border`, `bg-primary`, `text-on-primary`, `outline-focus`, `border-danger`, `bg-surface-hover` and `rounded-control`. These need a Tailwind theme mapping that this repo does not define. The other components use `var(--…)` directly. Confirm the intended mapping with Ehimare J. Okosun before you rely on those styles.
+- **Checkbox and Select edges.** These two draw their edge with `border-border`, not `--color-border-input`. If `border-border` is mapped to `--color-border` (`#d4d4d8`, 1.5:1 on `--color-bg`), the edge of the unchecked checkbox and the Select trigger falls below the 3:1 minimum. Map it to `--color-border-input`, or change the class (owner: Ehimare J. Okosun).
 - **Toast drops sticky toasts.** The proposal says error toasts stay until the user closes them, and products use an error toast with a Retry action to report a rolled-back update. But Toast keeps at most four and removes the oldest when a fifth arrives, even if that oldest is an error or has an action. A burst of toasts can therefore remove a rollback notice before the user sees it. Until this is fixed, don't rely on an error toast being the only record of a failed save (owner: Victor Oyeleke).
 - **Typecheck locally.** `npm run typecheck` fails with "Cannot find module 'lucide-react'" if your `node_modules` is older than `package.json`. Run `npm install` (or `npm ci`) to fix it.
