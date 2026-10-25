@@ -7,6 +7,10 @@
 // - [x] Keyboard (checked from code 2026-10-24): native <textarea>, no tabindex, so it sits in
 //       DOM Tab order; typing works and Enter adds a new line (it never submits the form);
 //       Tab leaves it; the character count is plain text and never takes focus
+// - [x] One edge, no layout shift (checked from code and generated CSS 2026-10-25): 1px
+//       --color-border-input; invalid 2px --color-danger; focused 2px --color-focus drawn on
+//       the edge, which wins over invalid
+// - [ ] States viewed in a browser: normal, focused, invalid, invalid and focused
 // - [ ] Screen reader checked once: pending manual check (Muizz)
 // - [x] Typed props, no `any`, colours from tokens.css
 // - [ ] Reviewed by one other interface engineer
@@ -18,6 +22,8 @@
 //
 // - forwardRef makes it work with React Hook Form's register(). Formik's getFieldProps() works too.
 // - Error styling switches on automatically from aria-invalid, which FormField sets.
+// - The border is always 1px, so the field never changes size: the invalid edge adds a 1px
+//   inset shadow, and the focus ring is an outline drawn inward over the edge (no offset).
 // - rows defaults to 4. Users can resize it vertically only, so it never breaks the layout's width.
 // - showCount, together with maxLength, shows "120 / 500" under the field. The count is part of
 //   the field's description (aria-describedby), so screen readers hear it on focus. It only
@@ -108,9 +114,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         "bg-[var(--color-bg)] text-[var(--color-text)] font-[family-name:var(--font-sans)]",
         "border border-[var(--color-border-input)]",
         "placeholder:text-[var(--color-text-muted)]",
-        "focus-visible:[outline:var(--focus-ring-width)_solid_var(--color-focus)]",
-        "focus-visible:[outline-offset:var(--focus-ring-offset)]",
-        "aria-[invalid=true]:border-2 aria-[invalid=true]:border-[var(--color-danger)]",
+        "aria-[invalid=true]:border-[var(--color-danger)]",
+        "aria-[invalid=true]:[box-shadow:inset_0_0_0_1px_var(--color-danger)]",
+        // Outlines paint above borders and shadows, so focus covers the invalid edge
+        // (one ring, never two). At least 2px, so it always covers the 1px inset too.
+        "focus-visible:[outline:max(2px,var(--focus-ring-width))_solid_var(--color-focus)]",
+        "focus-visible:[outline-offset:calc(-1*max(2px,var(--focus-ring-width)))]",
         "disabled:cursor-not-allowed disabled:bg-[var(--color-surface)] disabled:opacity-60",
         className,
       )}
