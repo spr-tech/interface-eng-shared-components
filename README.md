@@ -173,6 +173,17 @@ It ties the label to the control and links the hint and error with `aria-describ
 
 Props: every native `<input>` attribute (`type` defaults to `"text"`). Forwards its ref, so it works with React Hook Form's `register()`. Error styling switches on from `aria-invalid`, which FormField sets. Always use it inside FormField.
 
+The field always shows one edge, and its size never changes between states:
+
+| State | Edge |
+| --- | --- |
+| Normal | 1px `--color-border-input` |
+| Invalid | 2px `--color-danger` |
+| Focused | 2px `--color-focus`, drawn on the edge with no offset |
+| Invalid and focused | 2px `--color-focus`. The error text below the field still shows the error. |
+
+The border stays 1px in every state. The extra pixel is a 1px inset shadow (invalid) or an outline drawn inward over the edge (focus), so the text never moves. The focus edge is 5.2:1 on `--color-bg` and 4.7:1 on `--color-surface`, and the danger edge is 6.5:1 and 5.9:1, all above the 3:1 minimum. The focus outline is at least 2px even if you set `--focus-ring-width` lower, so it always covers the invalid edge.
+
 ```tsx
 <FormField label="Quantity" required>
   {(field) => <Input type="number" {...field} {...register("quantity")} />}
@@ -230,7 +241,7 @@ Tokens used by each tone:
 
 ### Textarea
 
-Props: every native `<textarea>` attribute (`rows` defaults to 4), plus `showCount`. Forwards its ref, so it works with React Hook Form's `register()`. Formik's `getFieldProps()` works too. Error styling switches on from `aria-invalid`, which FormField sets. Users can resize it vertically only. Always use it inside FormField.
+Props: every native `<textarea>` attribute (`rows` defaults to 4), plus `showCount`. Forwards its ref, so it works with React Hook Form's `register()`. Formik's `getFieldProps()` works too. Error styling switches on from `aria-invalid`, which FormField sets. Its edge works exactly like Input's (one edge, focus wins over invalid, no size change between states; see [Input](#input)). Users can resize it vertically only. Always use it inside FormField.
 
 - `showCount` together with `maxLength` shows a count such as "120 / 500" under the field. Without `maxLength`, `showCount` does nothing.
 - The count is linked to the field with `aria-describedby`, so screen readers hear "120 of 500 characters used" when the field gets focus.
@@ -373,7 +384,7 @@ What the components already do. Don't undo it when you use them.
   - Checked checkboxes show a check mark.
   - Toasts have an icon and a variant word.
   - Error states say in words what went wrong.
-- **Focus.** Visible `focus-visible` outlines use `--color-focus`. A linked Card draws the outline around the whole card.
+- **Focus.** Visible `focus-visible` outlines use `--color-focus`. Input and Textarea draw it on their own edge with no offset; Button and the other controls draw it outside, offset by `--focus-ring-offset`. A linked Card draws the outline around the whole card.
 - **Target size.** Button `sm` is 32px tall. Checkbox's hit area is 24×24px. Select options are at least 40px tall. All meet the WCAG 2.2 minimum of 24px.
 - **Responsive.**
   - Long text wraps instead of overflowing in Card, EmptyState, ErrorState, StatusBadge and Select options.
