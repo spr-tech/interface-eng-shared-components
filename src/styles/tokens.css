@@ -7,7 +7,8 @@
 
   Default values all pass WCAG 2.2 AA contrast on --color-bg (#ffffff):
   text 17.7:1, muted text 7.7:1, primary 6.7:1, danger 6.5:1, success 5.0:1,
-  warning 4.9:1, focus ring 5.2:1, input border 4.8:1.
+  warning 4.9:1, info 5.4:1, focus ring 5.2:1, input border 4.8:1.
+  On --color-surface-hover: text 14.0:1, muted text 6.1:1, input border 3.8:1, focus ring 4.1:1.
   If you change a colour, re-check it (4.5:1 for text, 3:1 for borders and focus).
 */
 
@@ -15,6 +16,7 @@
   /* Surfaces */
   --color-bg: #ffffff;
   --color-surface: #f4f4f5;
+  --color-surface-hover: #e4e4e7;   /* hover on rows and cards that sit on --color-surface */
   --color-border: #d4d4d8;          /* decorative dividers, card edges */
   --color-border-input: #71717a;    /* form control edges, must stay 3:1 or more */
 
@@ -37,6 +39,9 @@
   --color-warning: #a16207;
   --color-on-warning: #ffffff;
 
+  --color-info: #0e7490;            /* its own hue, so info never looks like a primary action */
+  --color-on-info: #ffffff;
+
   /* Focus ring */
   --color-focus: #2563eb;
   --focus-ring-width: 2px;
@@ -49,4 +54,5 @@
 
   /* Type: system fonts by default. Each team swaps in its own font here. */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-sans); /* headings; set your own heading font here */
 }

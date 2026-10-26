@@ -217,12 +217,12 @@ Tokens used by each tone:
 | Tone | Background | Text | Border |
 | --- | --- | --- | --- |
 | `neutral` | `--color-surface` | `--color-text` | `--color-border-input` |
-| `info` | `--color-primary` | `--color-on-primary` | none (transparent) |
+| `info` | `--color-info` | `--color-on-info` | none (transparent) |
 | `success` | `--color-success` | `--color-on-success` | none (transparent) |
 | `warning` | `--color-warning` | `--color-on-warning` | none (transparent) |
 | `danger` | `--color-danger` | `--color-on-danger` | none (transparent) |
 
-`tokens.css` has no info colour, so `info` borrows the primary role. Changing `--color-primary` also changes info badges. `neutral` sits on the same surface as Card, so it gets a visible border to keep its edge. The default text contrast is 16.1:1 for neutral, and the role figures in [Contrast](#contrast) for the others.
+`info` has its own role colour, `--color-info`, so info badges never look like a primary action. `neutral` sits on the same surface as Card, so it gets a visible border to keep its edge. The default text contrast is 16.1:1 for neutral, and the role figures in [Contrast](#contrast) for the others.
 
 ```tsx
 <StatusBadge tone="warning">Pending review</StatusBadge>
@@ -299,9 +299,15 @@ Copy [src/styles/tokens.css](src/styles/tokens.css) to `src/styles/tokens.css` i
 
 **Change the values, never the names.** The components read these variables by name, so a renamed variable silently stops working. To give your product its own look, edit values such as `--color-primary`, `--radius-md` or `--font-sans`. Don't hard-code colours in components.
 
-The tokens are surfaces (`--color-bg`, `--color-surface`, `--color-border`, `--color-border-input`), text (`--color-text`, `--color-text-muted`), and the roles primary, danger, success and warning. Each filled role has an `--color-on-*` colour for text on top of it, and primary and danger also have `-hover`. The rest are the focus ring (`--color-focus`, `--focus-ring-width`, `--focus-ring-offset`), shape (`--radius-sm`, `--radius-md`) and `--font-sans`.
+The tokens are surfaces (`--color-bg`, `--color-surface`, `--color-surface-hover`, `--color-border`, `--color-border-input`), text (`--color-text`, `--color-text-muted`), and the roles primary, danger, success, warning and info. Each filled role has an `--color-on-*` colour for text on top of it, and primary and danger also have `-hover`. The rest are the focus ring (`--color-focus`, `--focus-ring-width`, `--focus-ring-offset`), shape (`--radius-sm`, `--radius-md`) and fonts (`--font-sans`, `--font-display`).
 
 `--radius` is an alias of `--radius-md`. Dialog and Toast read it, so changing `--radius-md` changes their corners too.
+
+- `--color-info` is StatusBadge's info tone.
+- `--color-surface-hover` is for hover on rows and cards that sit on `--color-surface`. No shared component uses it yet.
+- `--font-display` is for headings. It defaults to the same stack as `--font-sans`; set it if your team wants a heading font. No shared component uses it yet.
+
+`tokens.css` is the only styling file you need. The components read the variables directly with `var(--…)` (for example `bg-[var(--color-surface)]`), so there is no Tailwind theme mapping to copy.
 
 ### Contrast
 
@@ -315,6 +321,8 @@ The default values all pass WCAG 2.2 AA. Ratios are computed from the values in 
 | `--color-danger` | `--color-bg` | 6.5:1 | 4.5:1 |
 | `--color-success` | `--color-bg` | 5.0:1 | 4.5:1 |
 | `--color-warning` | `--color-bg` | 4.9:1 | 4.5:1 |
+| `--color-info` | `--color-bg` | 5.4:1 | 4.5:1 |
+| `--color-info` | `--color-surface` | 4.9:1 | 4.5:1 |
 | `--color-focus` | `--color-bg` | 5.2:1 | 3:1 |
 | `--color-border-input` | `--color-bg` | 4.8:1 | 3:1 |
 | `--color-on-primary` | `--color-primary` | 6.7:1 | 4.5:1 |
@@ -323,6 +331,11 @@ The default values all pass WCAG 2.2 AA. Ratios are computed from the values in 
 | `--color-on-danger` | `--color-danger-hover` | 8.3:1 | 4.5:1 |
 | `--color-on-success` | `--color-success` | 5.0:1 | 4.5:1 |
 | `--color-on-warning` | `--color-warning` | 4.9:1 | 4.5:1 |
+| `--color-on-info` | `--color-info` | 5.4:1 | 4.5:1 |
+| `--color-text` | `--color-surface-hover` | 14.0:1 | 4.5:1 |
+| `--color-text-muted` | `--color-surface-hover` | 6.1:1 | 4.5:1 |
+| `--color-border-input` | `--color-surface-hover` | 3.8:1 | 3:1 |
+| `--color-focus` | `--color-surface-hover` | 4.1:1 | 3:1 |
 
 The default `--color-on-*` colours and `--color-bg` are all `#ffffff`, so each role scores the same against white either way. If you change `--color-bg` or an `--color-on-*` colour, check both pairs separately.
 
@@ -374,7 +387,5 @@ Before you merge: do a keyboard-only test, and check once with a screen reader. 
 
 ## Known gaps (need confirmation)
 
-- **Tailwind theme classes.** Checkbox, Select and FilterBar use classes such as `bg-surface`, `text-text`, `text-muted`, `border-border`, `bg-primary`, `text-on-primary`, `outline-focus`, `border-danger`, `bg-surface-hover` and `rounded-control`. These need a Tailwind theme mapping that this repo does not define. The other components use `var(--…)` directly. Confirm the intended mapping with Ehimare J. Okosun before you rely on those styles.
-- **Checkbox and Select edges.** These two draw their edge with `border-border`, not `--color-border-input`. If `border-border` is mapped to `--color-border` (`#d4d4d8`, 1.5:1 on `--color-bg`), the edge of the unchecked checkbox and the Select trigger falls below the 3:1 minimum. Map it to `--color-border-input`, or change the class (owner: Ehimare J. Okosun).
 - **Toast drops sticky toasts.** The proposal says error toasts stay until the user closes them, and products use an error toast with a Retry action to report a rolled-back update. But Toast keeps at most four and removes the oldest when a fifth arrives, even if that oldest is an error or has an action. A burst of toasts can therefore remove a rollback notice before the user sees it. Until this is fixed, don't rely on an error toast being the only record of a failed save (owner: Victor Oyeleke).
 - **Typecheck locally.** `npm run typecheck` fails with "Cannot find module 'lucide-react'" if your `node_modules` is older than `package.json`. Run `npm install` (or `npm ci`) to fix it.
